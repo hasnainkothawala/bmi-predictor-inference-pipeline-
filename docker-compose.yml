@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  mongo:
+
+    image: mongo:latest
+    ports:
+      - 12000:27017
+    volumes:
+      - /home/ubuntu/efs/mongo/mongodb:/data/db
+    command: mongod
+
+  app:
+
+    build:
+      context: .
+      dockerfile: dockerfile
+    env_file:
+      - ./app/docker.env
+    depends_on:
+      - mongo
+    volumes:
+      - /home/ubuntu/efs/:/home/ubuntu/efs/
+      - /home/ubuntu/efs/App/logs:/app/logs
+
+    ports:
+      - "5001:5001"
+
